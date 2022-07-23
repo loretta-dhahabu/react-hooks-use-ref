@@ -1,16 +1,22 @@
 import React, { useEffect, useRef, useState } from "react";
 import { makeRandomNumber } from "../utils";
-import { addPoint } from "../utils/chart";
+// import { addPoint } from "../utils/chart";
 
 function Ticker() {
   const [price, setPrice] = useState({ value: 0, ticks: 0 });
   const [color, setColor] = useState("black");
+  // create the ref and set its initial value
   const prevPrice = useRef(price);
   const canvasRef = useRef();
+  const prevPriceRef = useRef(price);
+  // set the new value of the ref (note: this doesn't trigger a re-render)
+  
 
-  useEffect(() => {
-    addPoint(canvasRef.current, prevPrice.current, price);
-  }, [price]);
+  // useEffect( () =>
+  // {
+  //   // use the current value of the ref
+  //   addPoint(canvasRef.current, prevPrice.current, price);
+  // }, [price]);
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -23,14 +29,16 @@ function Ticker() {
   }, []);
 
   useEffect(() => {
-    if (prevPrice.current.value < price.value) {
+    const prevPrice = prevPriceRef.current;
+    if (price > prevPrice) {
       setColor("green");
-    } else if (prevPrice.current.value > price.value) {
+    } else if (price < prevPrice) {
       setColor("red");
     } else {
       setColor("black");
     }
-    prevPrice.current = price;
+    // set the new value of the ref (note: this doesn't trigger a re-render)
+    prevPriceRef.current = price;
   }, [price]);
 
   return (
